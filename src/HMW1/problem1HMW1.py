@@ -23,7 +23,7 @@ def iterate(K, b, L, time, TYarray):
         TYarray[1].append(Yt)
         iterate(K, b, L, time, TYarray)
          
-
+#Run iterations to reach max pop
 def SolvePopulation(t2, p1, p2, maxPop):
     KandB = GetKandB(maxPop, p1, p2, t2)
     K = KandB[0]
@@ -34,6 +34,7 @@ def SolvePopulation(t2, p1, p2, maxPop):
     print("Solution: Y(t) = maxPop/(1 + " + str(b) + "*pow(math.e ," + str(K) + "*t))")
     plt.plot(TYarray[0], TYarray[1])
 
+#Final analytical solution is: N(t)=45000/1+149*e^-1.22*t
 def main():
     t2 = 1.00
     p1 = 300
