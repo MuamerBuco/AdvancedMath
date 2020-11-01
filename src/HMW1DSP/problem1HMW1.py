@@ -1,3 +1,4 @@
+#%%
 import numpy as np
 import math as mt
 import matplotlib.pyplot as plt
@@ -15,17 +16,18 @@ V(t) = 220 * sin(2*pi*50 + 30)
 t0 = 0
 t1 = 0.0005
 t2 = 0.001
+z = 0.5
 
 def sampleV(time, Vm, Qv):
     return Vm * mt.sin(2*mt.pi*50*time + Qv)
 
 print (sampleV(0.00125, 220, 30))
 
-time = np.linspace(0,1000,5)
+time = np.linspace(0,0.1,1000)
+voltage = np.zeros([1000])
 
-voltage = np.empty(1000)
 for x in range(0,1000):
     voltage[x] = sampleV(time[x], 220, 30)
 
-plt.plot(time, voltage)
 
+plt.plot(time, voltage)
