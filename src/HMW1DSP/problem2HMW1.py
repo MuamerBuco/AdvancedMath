@@ -2,17 +2,15 @@
 import numpy as np
 import math as mt
 import matplotlib.pyplot as plt
+import random
 
 '''
-Problem 1
-A.	Generate a sinusoidal signal and use two samples method to estimate 
-the phasor values of the signal. Use your method to at least six different signals in phase shift, 
-amplitude and sampling frequency.
-
-B.	Use a three-sample method for doing the same job in part A.
-
-V(t) = Vm * sin(wt * Qv)
-x = A^-1 * b
+Problem 2
+A. Repeat part 1, with noisy signals; change the noise level between 0.01 and 0.2 of the signal
+magnitude. Compare results as provided in the HW attached lecture notes.
+B. Compare between 2-samples, and 3-samples methods in terms of accuracy for noisy signals.
+C. Try to repeat the 2-samples, and 3-samples methods on a period time, and average the results,
+would this provide any improvement?
 '''
 
 t_arr = np.array([[0.012,0.018,0.024], [0.014,0.016,0.018], [0.02,0.05,0.08],
@@ -22,7 +20,7 @@ Vm_arr = np.array([110, 220, 380, 460, 620, 880]) # amplitude array
 Qv_arr = np.array([mt.radians(30), mt.radians(60), mt.radians(20), # phase shift arrays
 mt.radians(30), mt.radians(50), mt.radians(40)])
 
-number_of_samples = 2 #number of samples for the method to use
+number_of_samples = 3 #number of samples for the method to use
 Version = 0 #version of parameters used
 
 def printVariables(**args):
@@ -42,8 +40,8 @@ def runSimulation(version):
         voltage = np.zeros([1000])
         for i in range(0, 1000):
             voltage[i] = Vm * mt.sin(w*time[i] + Qv)
-        plt.plot(time, voltage)
-        plt.figure()
+        #plt.plot(time, voltage)
+        #plt.figure()
 
     # get an arbitrary number of voltage samples
     def sampleVoltage(time):
@@ -89,16 +87,30 @@ def runSimulation(version):
     Qerror = abs(Qv - Qvv)
 
     # print everything
-    printVariables(frequency = f, Amplitude = Vm, PhaseShift = mt.degrees(Qv), Qs = Q,
-    SampledVoltages = V, VmQv = VmQv, CalculatedPhaseShift = mt.degrees(Qvv), 
-    CalculatedAmplitude = Vmv)
+    #printVariables(frequency = f, Amplitude = Vm, PhaseShift = mt.degrees(Qv), Qs = Q,
+    # SampledVoltages = V, VmQv = VmQv, CalculatedPhaseShift = mt.degrees(Qvv), 
+    # CalculatedAmplitude = Vmv)
 
-    return Verror, mt.degrees(Qerror)
+    return [Verror, mt.degrees(Qerror), Vmv, mt.degrees(Qvv)]
 
-num_measurements = 3
-results_array = np.empty([num_measurements,2])
+num_measurements = 1000
+results_array = np.empty([num_measurements,4])
 for i in range(0,num_measurements):
     results_array[i] = runSimulation(Version)
 
 avg_error = np.mean(results_array, axis = 0)
-print("The average error for [Voltage, Phase] =", avg_error, "for ", num_measurements, "measurements")
+averaged_voltage = avg_error[2]
+averaged_phase = avg_error[3]
+
+averaged_voltage_error = 110 - averaged_voltage
+averaged_phase_error = 30 - averaged_phase
+
+default_voltage_error = avg_error[0]
+default_phase_error = avg_error[1]
+
+averaging_gain_voltage = default_voltage_error - averaged_voltage_error
+averaging_gain_phase = default_phase_error - averaged_phase_error
+
+print(f"The average error for [avgVoltage, avgPhase] = {averaged_voltage_error:.3f}", f"and {averaged_phase_error:.3f}")
+print(f"The average error for [defaultVoltage, defaultPhase] = {default_voltage_error:.3f}", f"and {default_phase_error:.3f}")
+print(f"Average gain in voltage accuracy is: {averaging_gain_voltage:.3f} and average gain in phase acuraccy is: {averaging_gain_phase:.3f}")
