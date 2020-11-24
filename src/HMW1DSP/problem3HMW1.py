@@ -13,12 +13,13 @@ C. Try to repeat the 2-samples, and 3-samples methods on a period time, and aver
 would this provide any improvement?
 '''
 
-t_arr = np.array([[0.1,0.2,0.3], [0.014,0.016,0.018], [0.02,0.05,0.08],
+t_arr = np.array([[0.1, 0.2, 0.3], [0.014,0.016,0.018], [0.02,0.05,0.08],
 [0.011,0.013,0.015], [0.005,0.01, 0.015], [0.01,0.015, 0.02]]) # time array of arbitrary size
 f_arr = np.array([30, 50, 60, 120, 240, 360, 80]) # frequency array
 Vm_arr = np.array([5, 110, 220, 380, 460, 620, 880]) # amplitude array
 Qv_arr = np.array([mt.radians(0), mt.radians(60), mt.radians(20), # phase shift arrays
 mt.radians(30), mt.radians(50), mt.radians(40)])
+It = np.array([0], [0], [0])
 
 number_of_samples = 3 #number of samples for the method to use
 Version = 0 #version of parameters used
@@ -45,7 +46,7 @@ def runSimulation(version):
 
     # get an arbitrary number of voltage samples
     def sampleVoltage(time):
-        return (Vm * mt.sin(w*time + Qv) + Vm*random.uniform(-0.2, 0.2))
+        return (Vm * mt.sin(w*time + Qv) + Vm*random.uniform(-0.2, 0.2)) #noise
 
     def calculateQ(time):
         return w*time
@@ -58,10 +59,10 @@ def runSimulation(version):
         Q[time] = calculateQ(t[time])
 
     # get n voltage samples
-    Vtemp = np.array([41, 178, 247])
+    Vtemp = np.array([249, 94, 84])
 
     def analogToVoltage(analog):
-        return np.interp(analog,[-256,256],[0,5])
+        return np.interp(analog,[-512,512],[0,5])
 
     V = []
     for value in Vtemp:
